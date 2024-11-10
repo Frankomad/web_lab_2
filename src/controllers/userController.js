@@ -22,7 +22,7 @@ export const login = async (req, res) => {
       console.log("SQL Injection Protection Enabled");
     }
 
-    result = await pool.query(queryText);
+    result = await pool.query(queryText, vulnerabilityEnabled ? [] : [username, password]);
     // Check if user exists
     if (result.rows.length > 0) {
       res.send(`Welcome, ${username}!`);
