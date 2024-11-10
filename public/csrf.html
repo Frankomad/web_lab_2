@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSRF Demo - Main Page</title>
+</head>
+<body>
+    <h1>CSRF Attack Demonstration</h1>
+
+    <!-- Buttons for Navigation and Actions -->
+    <form action="/sqlinjection" method="get" style="display: inline;">
+        <button type="submit">SQL Injection Demo</button>
+    </form>
+
+    <form action="/csrf/toggle" method="post" style="display: inline; margin-left: 10px;" id="toggleForm">
+        <input type="hidden" name="_csrf" id="csrfToggleToken">
+        <button type="submit" id="toggleButton">Disable CSRF Protection</button>
+    </form>
+
+    <form action="/csrf/set_auth" method="post" style="display: inline; margin-left: 10px;" id="authForm">
+        <input type="hidden" name="_csrf" id="csrfAuthToken">
+        <button type="submit">Set Auth Cookie (Login)</button>
+    </form>
+
+    <form action="/csrf/attack_page" method="get" style="display: inline; margin-left: 10px;">
+        <button type="submit">Perform CSRF Attack</button>
+    </form>
+
+    <hr>
+
+    <!-- CSRF Defense Status -->
+    <h2>CSRF Defense Status: 
+        <span id="csrfStatus" style="color: green;">Enabled</span>
+    </h2>
+
+    <script>
+        // Function to fetch and set CSRF tokens
+        function setCsrfTokens() {
+            fetch('/csrf/get_token')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("token:", data.csrfToken);
+                    // Populate CSRF tokens in forms
+                    document.getElementById('csrfToggleToken').value = data.csrfToken;
+                    document.getElementById('csrfAuthToken').value = data.csrfToken;
+
+                    // Update CSRF status display
+                    const statusText = document.getElementById('csrfStatus');
+                    const toggleButton = document.getElementById('toggleButton');
+                    if (data.csrfToken) {
+                        statusText.innerText = 'Enabled';
+                        statusText.style.color = 'green';
+                        toggleButton.innerText = 'Disable CSRF Protection';
+                    } else {
+                        statusText.innerText = 'Disabled';
+                        statusText.style.color = 'red';
+                        toggleButton.innerText = 'Enable CSRF Protection';
+                    }
+                })
+                .catch(error => console.error('Error fetching CSRF token:', error));
+        }
+
+        // Fetch CSRF tokens on initial load
+        document.addEventListener("DOMContentLoaded", setCsrfTokens);
+
+        // Fetch fresh CSRF tokens before submitting the toggle and auth forms
+        document.getElementById("toggleForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form from submitting
+            setCsrfTokens(); // Refresh token
+            setTimeout(() => this.submit(), 100); // Submit after delay to ensure token is set
+        });
+
+        document.getElementById("authForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form from submitting
+            setCsrfTokens(); // Refresh token
+            setTimeout(() => this.submit(), 100); // Submit after delay to ensure token is set
+        });
+    </script>
+</body>
+</html>

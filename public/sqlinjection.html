@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Injection Demo</title>
+</head>
+<body>
+    <h2>SQL Injection Demo</h2>
+
+    <!-- Checkbox to enable/disable SQL Injection -->
+    <label>
+        <input type="checkbox" id="vulnerabilityToggle" checked>
+        Enable SQL Injection Vulnerability
+    </label>
+    <button onclick="window.location.href='/csrf'">Go to CSRF attack demo</button>
+
+    <h3>Login Form</h3>
+    <form id="loginForm">
+        <label>
+            Username:
+            <input type="text" id="username" required>
+        </label>
+        <br>
+        <label>
+            Password:
+            <input type="password" id="password" required>
+        </label>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        // Listen for form submission
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const vulnerabilityEnabled = document.getElementById("vulnerabilityToggle").checked;
+
+            // Send login request with vulnerability toggle
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, vulnerabilityEnabled })
+            });
+
+            const result = await response.text();
+            document.getElementById("response").innerText = result;
+        });
+    </script>
+</body>
+</html>
+

