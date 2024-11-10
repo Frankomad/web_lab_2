@@ -29,7 +29,11 @@ app.use('/sqlinjection', sqlInjectionRoutes);
 app.use('/api', userRoutes);
 app.use('/csrf', csrfRoutes);
 
-// Custom CSRF Error Handler
+// Redirect from the base URL to /sqlinjection
+app.get('/', (req, res) => {
+  res.redirect('/sqlinjection');
+});
+
 // Custom CSRF Error Handler
 app.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {

